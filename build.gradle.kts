@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(ktorLibs.plugins.ktor)
     id("org.jlleitschuh.gradle.ktlint") version "12.1.2"
+    kotlin("plugin.serialization") version "2.3.20"
 }
 
 group = "com.byron"
@@ -20,6 +21,7 @@ dependencies {
     implementation(ktorLibs.server.core)
     implementation(ktorLibs.server.netty)
     implementation(libs.logback.classic)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0")
 
     testImplementation(kotlin("test"))
     testImplementation(ktorLibs.server.testHost)
