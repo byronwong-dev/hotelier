@@ -1,5 +1,6 @@
 package com.byron.hotelier.adapter.patagonia.dto
 
+import com.byron.hotelier.adapter.domain.Amenity
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -99,5 +100,47 @@ class HotelTest {
         assertNull(second.address)
         assertNull(second.description)
         assertNull(second.amenities)
+    }
+
+    @Test
+    fun `toDomain maps amenities and fields to domain`() {
+        val json =
+            """
+            {
+              "id": "iJhz",
+              "destination": 5432,
+              "name": "Beach Villas Singapore",
+              "lat": 1.264751,
+              "lng": 103.824006,
+              "address": "8 Sentosa Gateway, Beach Villas, 098269",
+              "info": "Located at the western tip of Resorts World Sentosa.",
+              "amenities": ["Aircon", "Tv", "Coffee machine", "Kettle", "Hair dryer", "Iron", "Tub"],
+              "images": {
+                "rooms": [{"url": "https://example.com/1.jpg", "description": "Double room"}],
+                "amenities": [{"url": "https://example.com/2.jpg", "description": "Pool"}]
+              }
+            }
+            """.trimIndent()
+
+        val domain = Json.decodeFromString<Hotel>(json).toDomain()
+
+        assertEquals("iJhz", domain.id)
+        assertEquals(1.264751, domain.latitude)
+        assertEquals(103.824006, domain.longitude)
+        assertEquals(emptyList(), domain.amenities.general)
+        assertEquals(
+            listOf(
+                Amenity.AIR_CONDITIONING,
+                Amenity.TV,
+                Amenity.COFFEE_MACHINE,
+                Amenity.KETTLE,
+                Amenity.HAIR_DRYER,
+                Amenity.IRON,
+                Amenity.BATHTUB,
+            ),
+            domain.amenities.room,
+        )
+        assertEquals(2, domain.images.rooms.size + domain.images.amenities.size)
+        assertEquals(emptyList(), domain.bookingConditions)
     }
 }

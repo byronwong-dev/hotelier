@@ -2,6 +2,7 @@
 
 package com.byron.hotelier.adapter.acme.dto
 
+import com.byron.hotelier.adapter.domain.toAmenities
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -15,6 +16,8 @@ import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.double
+import com.byron.hotelier.adapter.domain.Hotel as DomainHotel
+import com.byron.hotelier.adapter.domain.Images as DomainImages
 
 private object TrimmedStringSerializer : KSerializer<String> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("TrimmedString", PrimitiveKind.STRING)
@@ -61,4 +64,21 @@ data class Hotel(
     @SerialName("PostalCode") val postalCode: String,
     @SerialName("Description") val description: String,
     @SerialName("Facilities") val facilities: List<String>,
-)
+) {
+    fun toDomain() =
+        DomainHotel(
+            id = id,
+            destinationId = destinationId,
+            name = name,
+            latitude = latitude,
+            longitude = longitude,
+            address = address,
+            city = city,
+            country = country,
+            postalCode = postalCode,
+            description = description,
+            amenities = facilities.toAmenities(),
+            images = DomainImages(rooms = emptyList(), amenities = emptyList(), site = emptyList()),
+            bookingConditions = emptyList(),
+        )
+}

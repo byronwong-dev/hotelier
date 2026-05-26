@@ -1,5 +1,6 @@
 package com.byron.hotelier.adapter.acme.dto
 
+import com.byron.hotelier.adapter.domain.Amenity
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -115,5 +116,42 @@ class HotelTest {
         assertEquals("JP", h3.country)
         assertEquals("160-0023", h3.postalCode)
         assertEquals(listOf("Pool", "WiFi", "BusinessCenter", "DryCleaning", "Breakfast", "Bar", "BathTub"), h3.facilities)
+    }
+
+    @Test
+    fun `toDomain maps amenities and fields to domain`() {
+        val json =
+            """
+            {
+              "Id": "iJhz",
+              "DestinationId": 5432,
+              "Name": "Beach Villas Singapore",
+              "Latitude": 1.264751,
+              "Longitude": 103.824006,
+              "Address": "8 Sentosa Gateway, Beach Villas",
+              "City": "Singapore",
+              "Country": "SG",
+              "PostalCode": "098269",
+              "Description": "This 5 star hotel is located on the coastline of Singapore.",
+              "Facilities": ["Pool", "BusinessCenter", "WiFi ", "DryCleaning", " Breakfast", "Aircon", "BathTub"]
+            }
+            """.trimIndent()
+
+        val domain = Json.decodeFromString<Hotel>(json).toDomain()
+
+        assertEquals("iJhz", domain.id)
+        assertEquals(5432, domain.destinationId)
+        assertEquals("Beach Villas Singapore", domain.name)
+        assertEquals(1.264751, domain.latitude)
+        assertEquals(103.824006, domain.longitude)
+        assertEquals("8 Sentosa Gateway, Beach Villas", domain.address)
+        assertEquals("Singapore", domain.city)
+        assertEquals("SG", domain.country)
+        assertEquals("098269", domain.postalCode)
+        assertEquals(
+            listOf(Amenity.OUTDOOR_POOL, Amenity.BUSINESS_CENTER, Amenity.WIFI, Amenity.DRY_CLEANING, Amenity.BREAKFAST),
+            domain.amenities.general,
+        )
+        assertEquals(listOf(Amenity.AIR_CONDITIONING, Amenity.BATHTUB), domain.amenities.room)
     }
 }

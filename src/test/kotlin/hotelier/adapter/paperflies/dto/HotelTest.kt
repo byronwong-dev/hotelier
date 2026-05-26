@@ -1,5 +1,6 @@
 package com.byron.hotelier.adapter.paperflies.dto
 
+import com.byron.hotelier.adapter.domain.Amenity
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -189,5 +190,48 @@ class HotelTest {
         assertEquals(1, first.images.site.size)
         assertEquals(5, first.bookingConditions.size)
         assertEquals(0, hotels[1].bookingConditions.size)
+    }
+
+    @Test
+    fun `toDomain maps amenities and fields to domain`() {
+        val json =
+            """
+            {
+              "hotel_id": "iJhz",
+              "destination_id": 5432,
+              "hotel_name": "Beach Villas Singapore",
+              "location": {"address": "8 Sentosa Gateway, Beach Villas, 098269", "country": "Singapore"},
+              "details": "A lovely hotel.",
+              "amenities": {
+                "general": ["outdoor pool", "indoor pool", "business center", "childcare"],
+                "room": ["tv", "coffee machine", "kettle", "hair dryer", "iron"]
+              },
+              "images": {
+                "rooms": [{"link": "https://example.com/1.jpg", "caption": "Double room"}],
+                "site": [{"link": "https://example.com/2.jpg", "caption": "Front"}]
+              },
+              "booking_conditions": ["No pets."]
+            }
+            """.trimIndent()
+
+        val domain = Json.decodeFromString<Hotel>(json).toDomain()
+
+        assertEquals("iJhz", domain.id)
+        assertEquals("8 Sentosa Gateway, Beach Villas, 098269", domain.address)
+        assertEquals("Singapore", domain.country)
+        assertEquals("A lovely hotel.", domain.description)
+        assertEquals(
+            listOf(Amenity.OUTDOOR_POOL, Amenity.INDOOR_POOL, Amenity.BUSINESS_CENTER, Amenity.CHILDCARE),
+            domain.amenities.general,
+        )
+        assertEquals(
+            listOf(Amenity.TV, Amenity.COFFEE_MACHINE, Amenity.KETTLE, Amenity.HAIR_DRYER, Amenity.IRON),
+            domain.amenities.room,
+        )
+        assertEquals("https://example.com/1.jpg", domain.images.rooms.first().url)
+        assertEquals("Double room", domain.images.rooms.first().description)
+        assertEquals(1, domain.images.site.size)
+        assertEquals(emptyList(), domain.images.amenities)
+        assertEquals(listOf("No pets."), domain.bookingConditions)
     }
 }

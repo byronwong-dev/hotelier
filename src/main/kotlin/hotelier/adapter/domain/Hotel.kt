@@ -12,8 +12,8 @@ data class Images(
 )
 
 data class Amenities(
-    val general: List<String>,
-    val room: List<String>,
+    val general: List<Amenity>,
+    val room: List<Amenity>,
 )
 
 data class Hotel(
