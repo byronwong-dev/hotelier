@@ -4,3 +4,11 @@ ktor:
   application:
     modules:
       - com.byron.RoutingKt.configureRouting
+
+hotelier:
+  suppliers:
+    maxRetries: 3
+    enabled:
+      - ACME
+      - PAPERFLIES
+      - PATAGONIA
