@@ -72,8 +72,8 @@ class HotelMergeServiceTest {
         assertEquals("Singapore", beachVillas.city) // from acme (paperflies has none)
         assertEquals("Singapore", beachVillas.country) // paperflies primary
         assertEquals("098269", beachVillas.postalCode) // from acme (paperflies has none)
-        // description comes from paperflies (most complete supplier); derive expected to avoid encoding issues
-        val expectedDescription = paperfliesHotels.first { it.id == "iJhz" }.description
+        // description from patagonia (longest across all three suppliers)
+        val expectedDescription = patagoniaHotels.first { it.id == "iJhz" }.description
         assertEquals(expectedDescription, beachVillas.description)
 
         // amenities — union of all three suppliers, deduped
@@ -133,7 +133,7 @@ class HotelMergeServiceTest {
         // scalar fields
         assertEquals("SjyX", intercontinental.id)
         assertEquals(5432, intercontinental.destinationId)
-        assertEquals("InterContinental", intercontinental.name) // paperflies primary
+        assertEquals("InterContinental Singapore Robertson Quay", intercontinental.name) // acme (longer name)
         assertEquals(null, intercontinental.latitude) // neither supplier has coords
         assertEquals(null, intercontinental.longitude)
         assertEquals("1 Nanson Rd, Singapore 238909", intercontinental.address) // paperflies primary
@@ -184,7 +184,7 @@ class HotelMergeServiceTest {
         // scalar fields
         assertEquals("f8c9", hilton.id)
         assertEquals(1122, hilton.destinationId)
-        assertEquals("Hilton Tokyo", hilton.name) // paperflies primary
+        assertEquals("Hilton Shinjuku Tokyo", hilton.name) // acme (longer name, ties with patagonia go to existing)
         assertEquals(35.6926, hilton.latitude) // from patagonia (acme + paperflies have none)
         assertEquals(139.690965, hilton.longitude) // from patagonia
         assertEquals("160-0023, SHINJUKU-KU, 6-6-2 NISHI-SHINJUKU, JAPAN", hilton.address)

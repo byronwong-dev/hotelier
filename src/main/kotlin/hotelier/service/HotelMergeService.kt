@@ -98,14 +98,14 @@ class HotelMergeService {
         return Hotel(
             id = primary.id.takeIf { it.isNotBlank() } ?: secondary.id,
             destinationId = primary.destinationId,
-            name = primary.name,
+            name = if (a.name.length >= b.name.length) a.name else b.name,
             latitude = primary.latitude ?: secondary.latitude,
             longitude = primary.longitude ?: secondary.longitude,
             address = primary.address.takeIfNotBlank(secondary.address),
             city = primary.city.takeIfNotBlank(secondary.city),
             country = primary.country.takeIfNotBlank(secondary.country),
             postalCode = primary.postalCode.takeIfNotBlank(secondary.postalCode),
-            description = primary.description.takeIfNotBlank(secondary.description),
+            description = listOfNotNull(a.description, b.description).maxByOrNull { it.length },
             amenities =
                 Amenities(
                     general = (primary.amenities.general + secondary.amenities.general).distinct(),
