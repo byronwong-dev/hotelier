@@ -9,7 +9,7 @@ class HotelConfiguration(config: ApplicationConfig) {
             ?.mapNotNull { name ->
                 HotelSupplier.entries.firstOrNull { it.name.equals(name, ignoreCase = true) }
             }
-            ?: HotelSupplier.entries
+            ?: emptyList() // defensive, not showing > showing wrong value
 
     val maxRetries: Int =
         config.propertyOrNull("hotelier.suppliers.maxRetries")
