@@ -30,4 +30,28 @@ data class Hotel(
     val amenities: Amenities,
     val images: Images,
     val bookingConditions: List<String>,
-)
+) {
+    val detailsCompletenessScore: Int
+        get() {
+            val scalarFieldsScore =
+                listOfNotNull(
+                    this.latitude,
+                    this.longitude,
+                    this.address,
+                    this.city,
+                    this.country,
+                    this.postalCode,
+                    this.description,
+                ).size
+
+            val collectionsScore =
+                this.amenities.general.size +
+                    this.amenities.room.size +
+                    this.images.rooms.size +
+                    this.images.amenities.size +
+                    this.images.site.size +
+                    this.bookingConditions.size
+
+            return scalarFieldsScore + collectionsScore
+        }
+}

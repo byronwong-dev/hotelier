@@ -26,7 +26,7 @@ enum class Amenity(val category: AmenityCategory, val patterns: List<Regex>) {
     MINIBAR(AmenityCategory.ROOM, listOf(Regex("mini.?bar"))),
 }
 
-private fun String.normalise(): String =
+internal fun String.normalise(): String =
     trim().lowercase()
         .replace(Regex("[^a-z0-9 ]"), "")
         .replace(Regex(" +"), " ")
