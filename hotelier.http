@@ -1,0 +1,50 @@
+### All hotels (no filter)
+GET http://localhost:8080/hotels
+
+### Text search — by name
+GET http://localhost:8080/hotels?q=beach
+
+### Text search — by description keyword
+GET http://localhost:8080/hotels?q=tropical
+
+### Text search — by address
+GET http://localhost:8080/hotels?q=sentosa
+
+### Text search — case-insensitive
+GET http://localhost:8080/hotels?q=HILTON
+
+### Travellers — solo (1 adult)
+GET http://localhost:8080/hotels?travellers=1+0
+
+### Travellers — couple (2 adults)
+GET http://localhost:8080/hotels?travellers=2+0
+
+### Travellers — couple + 1 child
+GET http://localhost:8080/hotels?travellers=2+1
+
+### Travellers — couple + 2 children
+GET http://localhost:8080/hotels?travellers=2+2
+
+### Travellers — group (3 adults)
+GET http://localhost:8080/hotels?travellers=3+0
+
+### Travellers — family (3 adults + 2 children)
+GET http://localhost:8080/hotels?travellers=3+2
+
+### Travellers — large group (4 adults)
+GET http://localhost:8080/hotels?travellers=4+0
+
+### Travellers — large family (4 adults + 2 children)
+GET http://localhost:8080/hotels?travellers=4+2
+
+### Combined — text search + travellers
+GET http://localhost:8080/hotels?q=tokyo&travellers=2+0
+
+### Combined — address search + family preset
+GET http://localhost:8080/hotels?q=shinjuku&travellers=3+2
+
+### Invalid travellers value — expects 400
+GET http://localhost:8080/hotels?travellers=99+0
+
+### No match — expects empty array
+GET http://localhost:8080/hotels?q=paris
